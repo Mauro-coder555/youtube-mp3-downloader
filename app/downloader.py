@@ -7,7 +7,20 @@ class DownloadError(Exception):
     pass
 
 
-def download_youtube_audio_as_mp3(url: str, output_dir: str = "downloads") -> Path:
+def get_user_downloads_folder() -> Path:
+    """
+    Returns the default Downloads folder for the current user.
+    Works well for Windows and also keeps the app usable on other systems.
+    """
+    downloads_path = Path.home() / "Downloads"
+
+    if downloads_path.exists():
+        return downloads_path
+
+    return Path.home()
+
+
+def download_youtube_audio_as_mp3(url: str, output_dir: Path | None = None) -> Path:
     """
     Downloads audio from a YouTube URL and converts it to MP3.
 
@@ -16,7 +29,7 @@ def download_youtube_audio_as_mp3(url: str, output_dir: str = "downloads") -> Pa
         output_dir: Folder where the MP3 file will be saved.
 
     Returns:
-        Path to the downloads folder.
+        Path to the folder where the MP3 was saved.
 
     Raises:
         DownloadError: If the URL is empty or the download fails.
@@ -24,7 +37,7 @@ def download_youtube_audio_as_mp3(url: str, output_dir: str = "downloads") -> Pa
     if not url or not url.strip():
         raise DownloadError("Please enter a valid YouTube URL.")
 
-    downloads_path = Path(output_dir)
+    downloads_path = output_dir or get_user_downloads_folder()
     downloads_path.mkdir(parents=True, exist_ok=True)
 
     ydl_options = {
