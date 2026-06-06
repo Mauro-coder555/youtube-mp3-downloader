@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+downloads/*.mp3
+downloads/*.webm
+downloads/*.m4a
+downloads/*.part
+
+.DS_Store
+Thumbs.db
